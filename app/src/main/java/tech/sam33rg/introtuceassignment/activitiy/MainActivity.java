@@ -1,8 +1,10 @@
-package tech.sam33rg.introtuceassignment;
+package tech.sam33rg.introtuceassignment.activitiy;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import tech.sam33rg.introtuceassignment.R;
 
 public class MainActivity extends AppCompatActivity {
 
