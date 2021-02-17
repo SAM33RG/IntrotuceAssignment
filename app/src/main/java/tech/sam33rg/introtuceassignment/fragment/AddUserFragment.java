@@ -1,7 +1,9 @@
 package tech.sam33rg.introtuceassignment.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -14,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +49,7 @@ public class AddUserFragment extends Fragment {
     String TAG = "****AddUserFragment";
     Button addUser;
     View profileImage;
+    ImageView profileImageView;
 
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -86,6 +91,7 @@ public class AddUserFragment extends Fragment {
         addUser = view.findViewById(R.id.submit);
 
         profileImage = view.findViewById(R.id.profileImage);
+        profileImageView = view.findViewById(R.id.profileImageView);
 
         return view;
     }
@@ -123,7 +129,11 @@ public class AddUserFragment extends Fragment {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ImagePicker.Companion.with(getActivity())
+                        .galleryOnly()
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .start();
             }
         });
 
@@ -239,6 +249,23 @@ public class AddUserFragment extends Fragment {
         //if there is not any file
         else {
             //you can display an error toast
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG,"result");
+        if (resultCode == Activity.RESULT_OK) {
+            //Image Uri will not be null for RESULT_OK
+            Uri fileUri = data.getData();
+            profileImageView.setImageURI(fileUri);
+            Log.d(TAG,"success");
+
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(getActivity(), "error", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 }

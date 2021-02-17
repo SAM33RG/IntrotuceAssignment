@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -141,6 +142,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+        super.onActivityResult(requestCode,resultCode,data);
+        Log.d(TAG,"result");
+        fragments.get(1).onActivityResult(requestCode,resultCode,data);
 
     }
 }
