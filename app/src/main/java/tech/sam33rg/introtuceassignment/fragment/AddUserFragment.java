@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -50,11 +53,9 @@ public class AddUserFragment extends Fragment {
     Button addUser;
     View profileImage;
     ImageView profileImageView;
+    Uri profileImageUri;
+    String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/introtuceassignment.appspot.com/o/profile_img%2F1.jpg?alt=media&token=5cdddbee-a961-4f7c-80fa-4c7097f69362";
 
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     public AddUserFragment() {
         // Required empty public constructor
@@ -141,13 +142,13 @@ public class AddUserFragment extends Fragment {
     }
     private void verifyData (){
         texts.clear();
-        Boolean complete = true;
+        boolean complete = true;
         for (TextInputLayout layout:textInputLayouts){
             String s = layout.getEditText().getText().toString();
             texts.add(s);
             if(s == null || s.equals("")){
                 layout.setError(layout.getHint()+" is required.");
-//                complete = false;
+                complete = false;
             }
         }
         if(complete){
@@ -170,6 +171,12 @@ public class AddUserFragment extends Fragment {
                             if(task.getResult().size()!=0){
                                 Log.d(TAG, "number already present" + number );
                                 textInputLayouts.get(7).setError("Number already registered");
+                            }else {
+                                if(profileImageUri!=null){
+                                    uploadFile(profileImageUri,number);
+                                }else {
+                                    saveToDb(defaultImageUrl);
+                                }
                             }
 
                         } else {
@@ -177,6 +184,52 @@ public class AddUserFragment extends Fragment {
                         }
                     }
                 });
+    }
+    private void saveToDb(String url){
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Saving..");
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("firstName", texts.get(0));
+        user.put("lastName", texts.get(1));
+        user.put("dateOfBirth", texts.get(2));
+        user.put("gender", texts.get(3));
+        user.put("country", texts.get(4));
+        user.put("state", texts.get(5));
+        user.put("homeTown", texts.get(6));
+        user.put("phoneNumber", texts.get(7));
+        user.put("telephoneNumber", texts.get(8));
+        user.put("profileImg", url);
+        user.put("timestamp", new Date().getTime());
+
+        db.collection("users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(getActivity(), "user added", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                        reset();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "error", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+
+                    }
+                });
+    }
+    private void reset(){
+        for (TextInputLayout layout:textInputLayouts){
+            layout.getEditText().setText("");
+
+        }
+        profileImageView.setImageResource(android.R.drawable.ic_menu_upload);
+        profileImageUri = null;
     }
     private void uploadFile(final Uri file, String phone) {
         //if there is a file to upload
@@ -211,7 +264,8 @@ public class AddUserFragment extends Fragment {
                                 public void onSuccess(Uri uri) {
 
                                     // Got the download URL for 'users/me/profile.png'
-
+                                    Log.d(TAG,uri.toString());
+                                    saveToDb(uri.toString());
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -258,8 +312,8 @@ public class AddUserFragment extends Fragment {
         Log.d(TAG,"result");
         if (resultCode == Activity.RESULT_OK) {
             //Image Uri will not be null for RESULT_OK
-            Uri fileUri = data.getData();
-            profileImageView.setImageURI(fileUri);
+            profileImageUri = data.getData();
+            profileImageView.setImageURI(profileImageUri);
             Log.d(TAG,"success");
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
