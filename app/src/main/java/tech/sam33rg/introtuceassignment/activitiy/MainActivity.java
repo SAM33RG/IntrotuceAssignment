@@ -2,6 +2,8 @@ package tech.sam33rg.introtuceassignment.activitiy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,25 +12,78 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import tech.sam33rg.introtuceassignment.R;
+import tech.sam33rg.introtuceassignment.adapter.SimplePagerAdapter;
+import tech.sam33rg.introtuceassignment.fragment.AddUserFragment;
+import tech.sam33rg.introtuceassignment.fragment.AllUsersFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     String TAG = "************";
     Integer number = 1234567890;
     Integer old = 1234567891;
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
+    SimplePagerAdapter simplePagerAdapter;
+    ArrayList<Fragment> fragments;
+    ArrayList<String> tabTitles;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewPager = findViewById(R.id.view_pager);
+        tabLayout = findViewById(R.id.tabs);
+
+        fragments = new ArrayList<>();
+        tabTitles = new ArrayList<>();
+
+        fragments.add(AllUsersFragment.newInstance());
+        tabTitles.add("Users");
+
+        fragments.add(AddUserFragment.newInstance());
+        tabTitles.add("Enroll");
+
+
+        simplePagerAdapter = new SimplePagerAdapter(this,fragments);
+
+        viewPager.setAdapter(simplePagerAdapter);
+
+        new TabLayoutMediator(tabLayout, viewPager,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        tab.setText(tabTitles.get(position));
+                    }
+                }).attach();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         Map<String, Object> user = new HashMap<>();
