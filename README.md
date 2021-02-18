@@ -3,10 +3,11 @@
 [![FIREBASE](https://www.gstatic.com/devrel-devsite/prod/v4ff7513a940c844d7a200d0833ef676f25fef10662a3b57ca262bcf76cbd98e2/firebase/images/touchicon-180.png)](https://console.firebase.google.com/)
 
 ### Screenshots and APK
-![1](/assests/screenshots/1.jpg)
-![2](/assests/screenshots/2.jpg)
-![3](/assests/screenshots/3.jpg)
-![4](/assests/screenshots/4.jpg)
+  Enroll User    |         Required Validation      |       Unique Number Validation        |         All Users      |
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+
+![1](/assests/screenshots/1.jpg) | ![2](/assests/screenshots/2.jpg) | ![3](/assests/screenshots/3.jpg) | ![4](/assests/screenshots/4.jpg)
+
 [Apk]
 
 ### Assignment for Android app development internship
