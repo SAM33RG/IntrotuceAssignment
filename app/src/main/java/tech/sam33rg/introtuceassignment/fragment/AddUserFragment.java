@@ -54,7 +54,7 @@ public class AddUserFragment extends Fragment {
     View profileImage;
     ImageView profileImageView;
     Uri profileImageUri;
-    String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/introtuceassignment.appspot.com/o/profile_img%2F1.jpg?alt=media&token=5cdddbee-a961-4f7c-80fa-4c7097f69362";
+    String defaultImageUrl = "https://firebasestorage.googleapis.com/v0/b/introtuceassignment.appspot.com/o/profile_img%2Fuser.jpg?alt=media&token=5efd741b-9383-4fe9-9c7b-8a99b9c3ae09";
 
 
     public AddUserFragment() {
