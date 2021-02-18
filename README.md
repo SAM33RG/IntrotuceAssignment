@@ -5,7 +5,7 @@
 ### Screenshots and APK
   Enroll User    |         Required Validation      |       Unique Number Validation        |         All Users      |
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-![1](/assests/screenshots/1.jpg | width=100 ) | ![2](/assests/screenshots/2.jpg | width=100) | ![3](/assests/screenshots/3.jpg | width=100) | ![4](/assests/screenshots/4.jpg | width=100)
+![1](/assests/screenshots/1.jpg) | ![2](/assests/screenshots/2.jpg) | ![3](/assests/screenshots/3.jpg) | ![4](/assests/screenshots/4.jpg
 
 [Apk]
 
